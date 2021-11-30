@@ -1,0 +1,55 @@
+// import Bootstrap
+@import "custom";
+@import "~bootstrap/scss/bootstrap";
+
+body {
+    background-color: burlywood;
+    color: $black;
+}
+
+.navbar {
+    background-color: #ed6d6e;
+    padding: 1em .5em;
+}
+
+nav .container-fluid img {
+    width: 100px;
+    height: 60px;
+}
+
+nav .navbar-brand {
+    padding-bottom: 0!important;
+}
+
+nav .navbar-brand h1{
+    color: $white;
+}
+
+nav .navbar-nav .dropdown {
+    border-bottom: 2px solid $lightDark;
+}
+
+nav .navbar-nav .nav-link {
+    color: $black;
+}
+
+.dropdown-menu {
+    border-top: 2px solid black!important;
+    border-radius: 0!important;
+}
+
+.dropdown-menu[data-bs-popper] {
+    margin-top: 0!important;
+}
+
+.img-brand {
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (min-width: 992px) {
+    .navbar-collapse {
+        flex-basis: 0;
+        flex-grow: unset;
+    }
+}
