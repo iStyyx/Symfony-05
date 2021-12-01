@@ -12,6 +12,8 @@
                 <p>{{ program.summary }}</p>
                 <a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche</a>
             </div>
+        {% else %}
+            Aucune série trouvée.
         {% endfor %}
     </div>
 {% endblock %}
