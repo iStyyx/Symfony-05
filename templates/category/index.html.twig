@@ -3,7 +3,6 @@
 {% block title %}Hello CategoryController!{% endblock %}
 
 {% block body %}
-{{ include("_navbar.html.twig") }}
    {% for category in categories %}
         <div>
             <h1>Catégorie : {{ category.name }}</h1>
