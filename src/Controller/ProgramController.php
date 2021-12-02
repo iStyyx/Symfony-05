@@ -2,6 +2,7 @@
 // src/Controller/ProgramController.php
 namespace App\Controller;
 
+use App\Entity\Episode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,13 +30,13 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("show/{id}/season/", name="show", methods={"GET"}, requirements={"id"="\d+"})
+     * @Route("show/{programId}/season/", name="show", methods={"GET"}, requirements={"programId"="\d+"})
      */ 
-    public function show(int $id): Response
+    public function show(int $programId): Response
     {
         $program = $this->getDoctrine()
             ->getRepository(Program::class)
-            ->findOneBy(['id' => $id]);
+            ->findOneBy(['id' => $programId]);
 
         $seasons = $this->getDoctrine()
             ->getRepository(Season::class)
@@ -43,7 +44,7 @@ class ProgramController extends AbstractController
 
         if (!$program) {
             throw $this->createNotFoundException(
-                'No program with id : ' . $id . ' found int program\'s table.'
+                'No program with id : ' . $programId . ' found int program\'s table.'
             );
         }
 
@@ -57,5 +58,24 @@ class ProgramController extends AbstractController
             'program' => $program,
             'seasons' => $seasons
          ]);
+    }
+
+    /**
+     * @Route("{programId}/seasons/{seasonId}", name="season_show", methods={"GET"}, requirements={"programId"="\d+", "seasonId"="\d+"})
+     */
+    public function showSeason(int $programId, int $seasonId)
+    {
+        $program = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findOneBy(['id' => $programId]);
+        
+        $season = $this->getDoctrine()
+            ->getRepository(Season::class)
+            ->findOneBy(['id' => $seasonId]); 
+
+        return $this->render('program/season_show.html.twig', [
+            'program' => $program,
+            'season' => $season
+        ]);
     }
 }
