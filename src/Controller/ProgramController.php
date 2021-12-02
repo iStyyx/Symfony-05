@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Program;
 use App\Entity\Season;
-
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
 * @Route("/program/", name="program_")
@@ -30,21 +30,17 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("show/{programId}/season/", name="show", methods={"GET"}, requirements={"programId"="\d+"})
+     * @Route("{program}", name="show", methods={"GET"}, requirements={"program"="\d+"})
      */ 
-    public function show(int $programId): Response
+    public function show(Program $program): Response
     {
-        $program = $this->getDoctrine()
-            ->getRepository(Program::class)
-            ->findOneBy(['id' => $programId]);
-
         $seasons = $this->getDoctrine()
             ->getRepository(Season::class)
             ->findAll();
 
         if (!$program) {
             throw $this->createNotFoundException(
-                'No program with id : ' . $programId . ' found int program\'s table.'
+                'No program with id : ' . $program   . ' found int program\'s table.'
             );
         }
 
@@ -61,21 +57,25 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("{programId}/seasons/{seasonId}", name="season_show", methods={"GET"}, requirements={"programId"="\d+", "seasonId"="\d+"})
+     * @Route("{programId}/season/{seasonId}", name="season_show", methods={"GET"}, requirements={"programId"="\d+", "seasonId"="\d+"})
      */
-    public function showSeason(int $programId, int $seasonId)
+    public function showSeason(Program $programId, Season $seasonId): Response
     {
-        $program = $this->getDoctrine()
-            ->getRepository(Program::class)
-            ->findOneBy(['id' => $programId]);
-        
-        $season = $this->getDoctrine()
-            ->getRepository(Season::class)
-            ->findOneBy(['id' => $seasonId]); 
-
         return $this->render('program/season_show.html.twig', [
-            'program' => $program,
-            'season' => $season
+            'program' => $programId,
+            'season' => $seasonId
+        ]);
+    }
+
+    /**
+     * @Route("{programId}/season/{seasonId}/episode/{episodeId}", name="episode_show")
+     */
+    public function showEpisode(Program $programId, Season $seasonId, Episode $episodeId): Response
+    {
+        return $this->render('/program/episode_show.html.twig', [
+            'program' => $programId,
+            'season' => $seasonId,
+            'episode' => $episodeId
         ]);
     }
 }

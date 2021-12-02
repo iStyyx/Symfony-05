@@ -10,7 +10,7 @@
             <h2>{{ season.description }}</h2>
          </div>
          <img class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
-         <p>{{ program.summary }}</p>
+         <p>{{ program.synopsis }}</p>
          <p>Sortie en {{ season.year }}</p><br>
          <a href="{{ path('program_season_show', {programId: program.id, seasonId: season.id}) }}">
             Plus d'infos

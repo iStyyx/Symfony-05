@@ -27,7 +27,7 @@ class Program
     /**
      * @ORM\Column(type="text")
      */
-    private $summary;
+    private $synopsis;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -44,6 +44,16 @@ class Program
      * @ORM\OneToMany(targetEntity=Season::class, mappedBy="program")
      */
     private $season;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $country;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $year;
 
     public function __construct()
     {
@@ -67,14 +77,14 @@ class Program
         return $this;
     }
 
-    public function getSummary(): ?string
+    public function getSynopsis(): ?string
     {
-        return $this->summary;
+        return $this->synopsis;
     }
 
-    public function setSummary(string $summary): self
+    public function setSynopsis(string $synopsis): self
     {
-        $this->summary = $summary;
+        $this->synopsis = $synopsis;
 
         return $this;
     }
@@ -129,6 +139,30 @@ class Program
                 $season->setProgram(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    public function setYear(?int $year): self
+    {
+        $this->year = $year;
 
         return $this;
     }

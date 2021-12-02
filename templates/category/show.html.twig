@@ -8,8 +8,8 @@
         {% for program in programs %}
             <div>
                 <h2>{{ program.id }} / {{ program.title }} - Catégorie : {{ program.category.name }}</h2>
-                <p>{{ program.summary }}</p>
-                <a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche</a>
+                <p>{{ program.synopsis }}</p>
+                <a href="{{ path("program_show", { program: program.id }) }}">Voir la fiche</a>
             </div>
         {% else %}
             Aucune série trouvée.
