@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Program;
 use App\Entity\Season;
+use App\Form\ProgramType;
+use Symfony\Component\HttpFoundation\Request;
 // use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
@@ -30,13 +32,45 @@ class ProgramController extends AbstractController
     }
 
     /**
+     * The controller for the program add form
+     *
+     * @Route("new", name="new")
+     */
+    public function new(Request $request) : Response
+    {
+        // Create a new Program Object
+        $program = new Program();
+        // Create the associated Form
+        $form = $this->createForm(ProgramType::class, $program);
+        // Get data from HTTP request
+        $form->handleRequest($request);
+        // Was the form submitted?
+        if ($form->isSubmitted()) {
+            // Get the entity manager
+            $entityManager = $this->getDoctrine()->getManager();
+            // Persists the program
+            $entityManager->persist($program);
+            // Flush the program
+            $entityManager->flush();
+            // redirect to the programs page
+            return $this->redirectToRoute('program_index');
+        }
+
+        // Render the form
+        return $this->render('program/new.html.twig', [
+            "form" => $form->createView(),
+        ]);
+    }
+
+
+    /**
      * @Route("{program}", name="show", methods={"GET"}, requirements={"program"="\d+"})
      */ 
     public function show(Program $program): Response
     {
         $seasons = $this->getDoctrine()
             ->getRepository(Season::class)
-            ->findAll();
+            ->findBy(['program' => $program]);
 
         if (!$program) {
             throw $this->createNotFoundException(

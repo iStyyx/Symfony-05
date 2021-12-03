@@ -7,7 +7,7 @@
         <h1>Categorie : {{ category.name }}</h1>
         {% for program in programs %}
             <div>
-                <h2>{{ program.id }} / {{ program.title }} - Catégorie : {{ program.category.name }}</h2>
+                <h2>- {{ program.title }}</h2>
                 <p>{{ program.synopsis }}</p>
                 <a href="{{ path("program_show", { program: program.id }) }}">Voir la fiche</a>
             </div>
