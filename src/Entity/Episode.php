@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\EpisodeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Slugify;
 
 /**
  * @ORM\Entity(repositoryClass=EpisodeRepository::class)
@@ -37,6 +38,11 @@ class Episode
      * @ORM\Column(type="text")
      */
     private $synopsis;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
 
     public function getId(): ?int
     {
@@ -87,6 +93,18 @@ class Episode
     public function setSynopsis(string $synopsis): self
     {
         $this->synopsis = $synopsis;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

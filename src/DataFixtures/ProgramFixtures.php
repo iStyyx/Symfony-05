@@ -3,33 +3,58 @@
 namespace App\DataFixtures;
 
 use App\Entity\Program;
+use App\Service\Slugify;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ProgramFixtures extends Fixture
+class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager): void
+    const PROGRAMS = [
+        'Walking Dead',
+        'Sense8',
+        'Lucifer',
+        'Prison Break',
+        'Squid Game',
+    ];
+
+    private Slugify $slugify;
+
+    public function __construct(Slugify $slugify)
     {
-        for ($i = 1; $i <= 4; $i++) {
+        $this->slugify = $slugify;
+    }
+
+    public function load(ObjectManager $manager)
+    {
+        $i=0;
+        $j=2;
+        foreach (self::PROGRAMS as $key => $programName) {
             $program = new Program();
-            $program->setTitle('Série n°' . $i);
-            $program->setSynopsis('Ca c\'est le synopsis de la série ' . $i);
+            $program->setTitle($programName);
+            $program->setSlug($this->slugify->generate($programName));
+            $program->setSynopsis('L\'une des meilleures séries de ce monde');
+            $program->setYear('2015');
             $program->setPoster('https://www.serieslike.com/img/shop_01.png');
+            $program->setCountry('U.S.A.');
             $program->setCategory($this->getReference('category_0'));
-            $program->addActor($this->getReference('actor_' . $i));
+            for ($i; $i < $j; $i++) {
+                $program->addActor($this->getReference('actor_' . $i));
+            }
+            $j = $j+2;
+            $this->addReference('program_' . $key, $program);
             $manager->persist($program);
-            $this->addReference('program_' . $i, $program);
         }
+
         $manager->flush();
     }
 
     public function getDependencies()
     {
-        // Return here all fixtures classes which ProgramFixtures depends on
+        // On retourne toutes les classes de fixtures dont ProgramFixtures dépend
         return [
-            ActorFixtures::class,
-            CategoryFixtures::class,
+          ActorFixtures::class,
+          CategoryFixtures::class,
         ];
     }
 }

@@ -2,32 +2,40 @@
 
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use App\Entity\Season;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
-class SeasonFixtures extends Fixture
+class SeasonFixtures extends Fixture implements DependentFixtureInterface
 {
+    const SEASONS = [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+    ];
+
     public function load(ObjectManager $manager): void
     {
-        for ($i = 1; $i <= 4; $i++) {
+        foreach (self::SEASONS as $key => $seasonNumber) {
             $season = new Season();
-            $season->setProgram($this->getReference('program_' . $i));
-            $season->setNumber($i);
-            $season->setYear('200' . $i);
-            $season->setDescription('Ceci est la description de la saison ' . $i);
+            $season->setNumber($seasonNumber);
+            $season->setYear(2010);
+            $season->setDescription("Ceci est une saison incroyable comme toutes les autres d'ailleurs !");
             $manager->persist($season);
-            $this->addReference('season' . $i, $season);
+            $season->setProgram($this->getReference('program_0'));
+            $this->addReference('season_' . $key, $season);
         }
         $manager->flush();
     }
 
     public function getDependencies()
     {
-        // Return here all fixtures classes which SeasonFixtures depends on
+        // On retourne toutes les classes de fixtures dont ProgramFixtures dépend
         return [
-            ProgramFixtures::class,
+          ProgramFixtures::class,
         ];
     }
 }
