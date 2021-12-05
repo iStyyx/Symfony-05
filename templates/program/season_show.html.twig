@@ -5,7 +5,7 @@
 {% block body %}
     <div class="media">
         <h1 class="mt-0">Saison {{ season.number }} de {{ program.title }}</h1>
-        <img class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
+        <img style="width: 250px; height: 400px;" class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
         <div class="media-body">
             <p>La saison {{ season.number }} a été diffusé en {{ season.year }} et comporte {{season.episode|length}} épisodes</p>
         </div>
