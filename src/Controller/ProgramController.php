@@ -8,8 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Program;
 use App\Entity\Season;
 use App\Entity\Episode;
+use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Form\ProgramType;
 use App\Service\Slugify;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
@@ -112,16 +115,30 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("{program_slug}/season/{seasonId}/episode/{episode_slug}", name="episode_show", methods={"GET"})
+     * @Route("{program_slug}/season/{seasonId}/episode/{episode_slug}", name="episode_show", methods={"GET", "POST"})
      * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"program_slug": "slug"}})
      * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping": {"episode_slug": "slug"}})
      */
-    public function showEpisode(Program $program_slug, Season $seasonId, Episode $episodeId): Response
+    public function showEpisode(Program $program, Season $season, Episode $episode, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $comment = new Comment(); 
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setEpisode($episode);
+            $comment->setAuthor($this->getUser());
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            return $this->redirectToRoute('program_episode_show', ['program_slug' => $program->getSlug(), 'seasonId' => $season->getId(), 'episode_slug' => $episode->getSlug()]);
+        }
+
         return $this->render('/program/episode_show.html.twig', [
-            'program' => $program_slug,
-            'season' => $seasonId,
-            'episode' => $episodeId
+            'program' => $program,
+            'season' => $season,
+            'episode' => $episode,
+            'form' => $form->createView(),
         ]);
     }
 }

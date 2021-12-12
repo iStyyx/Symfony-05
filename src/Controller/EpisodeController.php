@@ -62,17 +62,17 @@ class EpisodeController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="episode_show", methods={"GET"})
+     * @Route("/{slug}", name="episode_show", methods={"GET", "POST"})
      */
     public function show(Episode $episode): Response
     {
-        return $this->render('episode/show.html.twig', [
+        return $this->renderForm('episode/show.html.twig', [
             'episode' => $episode,
         ]);
     }
 
     /**
-     * @Route("/{slug}/edit", name="episode_edit", methods={"GET", "POST"})
+     * @Route("/{slug}/edit", name="episode_edit", methods={"GET"})
      */
     public function edit(Request $request, Episode $episode, EntityManagerInterface $entityManager): Response
     {
