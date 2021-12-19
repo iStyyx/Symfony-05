@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/comment")
@@ -18,6 +20,7 @@ class CommentController extends AbstractController
 {
     /**
      * @Route("/", name="comment_index", methods={"GET"})
+     * @Security("is_granted('ROLE_CONTRIBUTOR')")
      */
     public function index(CommentRepository $commentRepository): Response
     {
@@ -28,6 +31,7 @@ class CommentController extends AbstractController
 
     /**
      * @Route("/new", name="comment_new", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_CONTRIBUTOR')")
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -79,7 +83,7 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="comment_delete", methods={"POST"})
+     * @Route("/{id}", name="comment_delete", methods={"GET", "POST"})
      */
     public function delete(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {

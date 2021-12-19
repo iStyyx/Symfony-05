@@ -26,6 +26,25 @@
         </tbody>
     </table>
 
+    <div>
+        <h2>Commentaires :</h2>
+        {% for comment in episode.comments %}
+            <div>
+                <p>{{ comment.comment }}</p>
+                <p>{{ comment.rate }}</p>
+                <p>{{ comment.author.email }}</p>
+            </div>
+        {% else %}
+            <p>Aucun commentaire sur cet épisode !</p>
+        {% endfor %}
+        {% if app.user %}
+            <p><strong>Ajouter un commentaire</strong> :</p>
+            {{ include('comment/_form.html.twig') }}
+        {% else %}
+            <hp><a class="nav-link" href="{{ path('login') }}">Ajouter un commentaire</a></hp>
+        {% endif %}
+    </div>  
+
     <a href="{{ path('episode_index') }}">back to list</a><br>
 
     <a href="{{ path('episode_edit', {'slug': episode.slug}) }}">edit</a>

@@ -10,18 +10,22 @@
             <p>{{ program.synopsis }}</p>
             <p>{{ episode.synopsis }}</p>
         </div>
-    </div>
-    <p>
+    </div><hr>
+    <div>
         <h2>Commentaires :</h2>
         {% for comment in episode.comments %}
             <div>
+                <h4>{{ comment.author.email }} :<strong><span> {{ comment.rate }}/10</span></strong></h4>
                 <p>{{ comment.comment }}</p>
-                <p>{{ comment.rate }}</p>
-                <p>{{ comment.author.email }}</p>
             </div>
+            {% if app.user == comment.author or is_granted("ROLE_ADMIN") %}
+                <a href="{{ path("program_comment_delete", {'program_slug':program.slug, 'seasonId':season.id, 'episode_slug': episode.slug, 'comment_id': comment.id})}}">Supprimer le commentaire</a>
+            {% endif %}
         {% else %}
             <p>Aucun commentaire sur cet épisode !</p>
         {% endfor %}
+    </div><hr>
+    <div>
         {% if app.user %}
             <p><strong>Ajouter un commentaire</strong> :</p>
             {{ include('comment/_form.html.twig') }}

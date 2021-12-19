@@ -17,9 +17,10 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Security\Core\Exception\AcessDeniedException;
 
 /**
-* @Route("/program/", name="program_")
+* @Route("/programs/", name="program_")
 */
 class ProgramController extends AbstractController
 {
@@ -56,6 +57,7 @@ class ProgramController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $slug = $slugify->generate($program->getTitle());
             $program->setSlug($slug);
+            $program->setOwner($this->getUser());
             // Persists the program
             $entityManager->persist($program);
             // Flush the program
@@ -122,7 +124,7 @@ class ProgramController extends AbstractController
     public function showEpisode(Program $program, Season $season, Episode $episode, Request $request, EntityManagerInterface $entityManager): Response
     {
         $comment = new Comment(); 
-        $form = $this->createForm(CommentType::class, $comment);
+        $form = $this->createForm(CommentType::class, $comment);    
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -140,5 +142,47 @@ class ProgramController extends AbstractController
             'episode' => $episode,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("{slug}/edit", name="edit", methods={"GET", "POST"})
+     */
+    public function edit(Request $request, Program $program, EntityManagerInterface $entityManager): Response
+    {
+        if (!($this->getUser() === $program->getOwner())) 
+        {
+            // If not the owner, throw a denied exception
+            throw new AccessDeniedException('Only The owner can edit the program!');
+        }
+
+        $form = $this->createForm(ProgramType::class, $program);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('program_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('program/edit.html.twig', [
+            'program' => $program,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * 
+     * @Route("{program_slug}/season/{seasonId}/episode/{episode_slug}/comment/{comment_id}", methods={"GET", "POST"}, name="comment_delete")
+     * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"program_slug": "slug"}})
+     * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping": {"episode_slug": "slug"}})
+     */
+    public function deleteComment(Program $program, Season $season, Episode $episode, Comment $comment, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->getUser() == $comment->getAuthor() || in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
+            $entityManager->remove($comment);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('program_episode_show', ['program_slug' => $program->getSlug(), 'seasonId' => $season->getId(), 'episode_slug' => $episode->getSlug()], Response::HTTP_SEE_OTHER);
     }
 }

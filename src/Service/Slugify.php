@@ -35,6 +35,6 @@ class Slugify
 
     public function generate(string $input): string
     {   
-        return mb_strtolower(preg_replace(array('/[^a-zA-Z0-9 \'-]/', '/[ -\']+/', '/^-|-$/'), array('', '-', ''), self::remove_accent($input)));
+        return mb_strtolower(preg_replace(array('/[^a-zA-Z0-9 \'-]/', '/[ -\']+/', '/^-|-$/'), array('', '-', ''), $this->remove_accent($input)));
     }
 }

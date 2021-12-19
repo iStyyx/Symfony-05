@@ -23,6 +23,7 @@ class UserFixtures extends Fixture
         $contributor = new User();
         $contributor->setEmail('contributor@monsite.com');
         $contributor->setRoles(['ROLE_CONTRIBUTOR']);
+        $this->addReference('contributor_0', $contributor);
         $hashedPassword = $this->passwordHasher->hashPassword($contributor, 'contributorpassword');
         $contributor->setPassword($hashedPassword);
         $manager->persist($contributor);
