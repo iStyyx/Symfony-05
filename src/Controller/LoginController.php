@@ -27,11 +27,17 @@ class LoginController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout", methods={"GET"})
+     * @Route("/my-profile", name="profile")
      */
-    public function logout(): void
+    public function showProfile(): Response
     {
-        // controller can be blank: it'll never be called
-        throw new \Exception('Don\'t forget to activate logout in security/yaml');
+        if (empty($this->getUser())) {
+            return $this->redirectToRoute('login');
+        } else {
+            dump($this->getUser()->getComments());
+            return $this->render('my-profile.html.twig', [
+                'comments' => $this->getUser()->getComments()
+            ]);
+        }
     }
 }

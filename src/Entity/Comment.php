@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Episode;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -26,6 +27,7 @@ class Comment
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Range(min = 0, max = 10, notInRangeMessage = "You should rate between {{ min }} and {{ max }}")
      */
     private $rate;
 

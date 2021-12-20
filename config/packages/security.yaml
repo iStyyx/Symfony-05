@@ -45,3 +45,7 @@ security:
     access_control:
         - { path: ^/programs/new, roles: ROLE_CONTRIBUTOR }
         - { path: ^/programs/[a-z-]+/edit, roles: ROLE_CONTRIBUTOR }
+        - { path: ^/episode/, roles: ROLE_CONTRIBUTOR }
+        - { path: ^/episode/[a-z-]+/edit, roles: ROLE_CONTRIBUTOR }
+        - { path: ^/season/, roles: ROLE_CONTRIBUTOR }
+        - { path: ^/season/[a-z-]+/edit, roles: ROLE_CONTRIBUTOR }

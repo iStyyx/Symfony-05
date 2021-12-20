@@ -19,7 +19,7 @@
                 <p>{{ comment.comment }}</p>
             </div>
             {% if app.user == comment.author or is_granted("ROLE_ADMIN") %}
-                <a href="{{ path("program_comment_delete", {'program_slug':program.slug, 'seasonId':season.id, 'episode_slug': episode.slug, 'comment_id': comment.id})}}">Supprimer le commentaire</a>
+                <a href="{{ path("program_comment_delete", {'program_slug':program.slug, 'seasonId':season.id, 'episode_slug': episode.slug, 'commentId': comment.id})}}">Supprimer le commentaire</a>
             {% endif %}
         {% else %}
             <p>Aucun commentaire sur cet épisode !</p>

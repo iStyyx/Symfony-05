@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %} 
+
+{% block title %} Bonjour {{ app.user.email }} {% endblock title %} 
+
+{% block body %}
+    <h1>Profil de {{ app.user.email }}</h1>
+
+    {% if "ROLE_ADMIN" in app.user.roles or "ROLE_CONTRIBUTOR" in app.user.roles %}
+        <h2>Commentaires postés :</h2>
+        {% if app.user.comments is defined %}
+        <ul>
+            {% for comment in app.user.comments %}
+            <li>
+                {{ comment.comment }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>Aucun commentaires postés</p>
+        {% endif %}
+    {% endif %}
+{% endblock body %}

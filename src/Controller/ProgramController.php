@@ -172,17 +172,18 @@ class ProgramController extends AbstractController
 
     /**
      * 
-     * @Route("{program_slug}/season/{seasonId}/episode/{episode_slug}/comment/{comment_id}", methods={"GET", "POST"}, name="comment_delete")
+     * @Route("{program_slug}/season/{seasonId}/episode/{episode_slug}/comment/{commentId}", methods={"GET", "POST"}, name="comment_delete")
      * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"program_slug": "slug"}})
      * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping": {"episode_slug": "slug"}})
+     * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */
     public function deleteComment(Program $program, Season $season, Episode $episode, Comment $comment, EntityManagerInterface $entityManager): Response
     {
-        if ($this->getUser() == $comment->getAuthor() || in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
+        if (in_array("ROLE_ADMIN", $this->getUser()->getRoles()) || $this->getUser() === $comment->getAuthor()) {
             $entityManager->remove($comment);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('program_episode_show', ['program_slug' => $program->getSlug(), 'seasonId' => $season->getId(), 'episode_slug' => $episode->getSlug()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('program_episode_show', ['program_slug' => $program->getSlug(), 'seasonId' => $season->getId(), 'episode_slug' => $episode->getSlug(), 'commentId' => $comment->getId()], Response::HTTP_SEE_OTHER);
     }
 }
