@@ -6,6 +6,9 @@ body {
     background-color: burlywood;
     color: $black;
 }
+.container-fluid {
+    padding-left: 0;
+}
 
 .navbar {
     background-color: #ed6d6e;
@@ -23,6 +26,7 @@ nav .navbar-brand {
 
 nav .navbar-brand h1{
     color: $white;
+    margin: 0 .4em .3em -.2em;
 }
 
 nav .navbar-nav .dropdown {
@@ -30,7 +34,7 @@ nav .navbar-nav .dropdown {
 }
 
 nav .navbar-nav .nav-link {
-    color: $black;
+    color: $dark;
 }
 
 .dropdown-menu {
@@ -47,9 +51,55 @@ nav .navbar-nav .nav-link {
     align-items: center;
 }
 
+.navbar-nav {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 18px;
+}
+
+.main-tab {
+    display: flex;
+}
+
+.main-tab li {
+    padding-right: .4em;
+}
+
+.main-tab li a:hover, .log-in li a:hover {
+    color: rgba(230, 230, 230, 0.959);
+}
+
+.main-tab li:last-child {
+    padding: 0;
+}
+
+.log-in {
+    display: flex;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0;
+}
+
 @media screen and (min-width: 992px) {
     .navbar-collapse {
         flex-basis: 0;
-        flex-grow: unset;
+    }
+}
+
+@media screen and (max-width: 992px) {
+
+    .main-tab {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .main-tab li, .log-in {
+        width: 100%;
+        text-align: center;
     }
 }

@@ -1,15 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-<!doctype html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <title>Wild Series</title>
-</head>
-<body>
-   {{ include("_navbar.html.twig") }}
-   <h1>{{ website }}</h1>
-</body>
-</html>
+   <h1>{{ title }}</h1>
+   <h2><a href="{{path("program_index")}}">Les séries</a></h2>
+   <h2><a href="{{path("category_index")}}">Les catégories</a></h2>
 {% endblock body %}

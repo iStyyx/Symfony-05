@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Episode #{{ episode.number }}{% endblock %}
+
+{% block body %}
+    <div class="media">
+        <img style="width: 250px; height: 400px;" class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
+        <div class="media-body">
+            <h1 class="mt-0">Saison : {{season.number}} - Episode {{ episode.number }} : {{ episode.title }}</h1>
+            <p>{{ program.synopsis }}</p>
+            <p>{{ episode.synopsis }}</p>
+        </div>
+    </div><hr>
+    <div>
+        <h2>Commentaires :</h2>
+        {% for comment in episode.comments %}
+            <div>
+                <h4>{{ comment.author.email }} :<strong><span> {{ comment.rate }}/10</span></strong></h4>
+                <p>{{ comment.comment }}</p>
+            </div>
+            {% if app.user == comment.author or is_granted("ROLE_ADMIN") %}
+                <a href="{{ path("program_comment_delete", {'program_slug':program.slug, 'seasonId':season.id, 'episode_slug': episode.slug, 'commentId': comment.id})}}">Supprimer le commentaire</a>
+            {% endif %}
+        {% else %}
+            <p>Aucun commentaire sur cet épisode !</p>
+        {% endfor %}
+    </div><hr>
+    <div>
+        {% if app.user and is_granted("ROLE_ADMIN") or is_granted("ROLE_CONTRIBUTOR") %}
+            {% if app.user %}
+                <p><strong>Ajouter un commentaire</strong> :</p>
+                {{ include('comment/_form.html.twig') }}
+            {% else %}
+                <hp><a class="nav-link" href="{{ path('login') }}">Laisser un commentaire</a></hp>
+            {% endif %}
+        {% endif %}
+    </div>
+    <a href="{{ path('program_index') }}">
+        Retour à la liste des programmes
+    </a>
+{% endblock %}
