@@ -26,11 +26,13 @@
         {% endfor %}
     </div><hr>
     <div>
-        {% if app.user %}
-            <p><strong>Ajouter un commentaire</strong> :</p>
-            {{ include('comment/_form.html.twig') }}
-        {% else %}
-            <hp><a class="nav-link" href="{{ path('login') }}">Laisser un commentaire</a></hp>
+        {% if app.user and is_granted("ROLE_ADMIN") or is_granted("ROLE_CONTRIBUTOR") %}
+            {% if app.user %}
+                <p><strong>Ajouter un commentaire</strong> :</p>
+                {{ include('comment/_form.html.twig') }}
+            {% else %}
+                <hp><a class="nav-link" href="{{ path('login') }}">Laisser un commentaire</a></hp>
+            {% endif %}
         {% endif %}
     </div>
     <a href="{{ path('program_index') }}">

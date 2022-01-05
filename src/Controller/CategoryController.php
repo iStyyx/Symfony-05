@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class CategoryController extends AbstractController
 {
     /**
-     * Get all catogories
+     * Get all categories
      * 
      * @Route("", name="index")
      */
@@ -65,7 +65,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Get all programs from a categorie
+     * Get all programs from a category
      * 
      * @Route("{categoryName}", name="show")
      */

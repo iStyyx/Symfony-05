@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/season")
@@ -18,6 +20,7 @@ class SeasonController extends AbstractController
 {
     /**
      * @Route("/", name="season_index", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function index(SeasonRepository $seasonRepository): Response
     {
@@ -28,6 +31,7 @@ class SeasonController extends AbstractController
 
     /**
      * @Route("/new", name="season_new", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -60,6 +64,7 @@ class SeasonController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="season_edit", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function edit(Request $request, Season $season, EntityManagerInterface $entityManager): Response
     {
@@ -80,6 +85,7 @@ class SeasonController extends AbstractController
 
     /**
      * @Route("/{id}", name="season_delete", methods={"POST"})
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function delete(Request $request, Season $season, EntityManagerInterface $entityManager): Response
     {
